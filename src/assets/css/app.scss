@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body::-webkit-scrollbar,
+::-webkit-scrollbar {
+  width: 5px;
+  background-color: rgba(0, 0, 0, 0.03) !important;
+  cursor: pointer !important;
+  height: 5px !important;
+}
+
+body::-webkit-scrollbar-track,
+::-webkit-scrollbar-track {}
+
+::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.input {
+  @apply w-full border  ring-1 ring-gray-100 border-[#17a2b8] rounded-md sm:p-4 p-3 outline-none italic font-normal text-gray-600
+}
