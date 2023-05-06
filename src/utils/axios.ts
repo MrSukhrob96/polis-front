@@ -36,11 +36,12 @@ httpApi.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        let token  = window.localStorage.getItem("accessToken") || "";
+        let token = window.localStorage.getItem("accessToken") || "";
 
         const response = await httpApi.post("/auth/refreshToken", token);
-
-        httpApi.defaults.headers.common.Authorization = `Bearer ${response.data.access_token}`;
+        token = response.data?.accessToken || "";
+        window.localStorage.setItem("accessToken", token);
+        httpApi.defaults.headers.common.Authorization = `Bearer ${token}`;
 
         return httpApi(originalRequest);
       } catch (refreshTokenError) {
