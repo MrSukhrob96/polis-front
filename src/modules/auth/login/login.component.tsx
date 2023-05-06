@@ -1,17 +1,15 @@
 import React from "react";
-import { LoginPropsType } from "./login.types";
+
 import { useNavigate } from "react-router-dom";
 
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+
+import { LoginPropsType } from "./login.types";
 import useAuth from "../../../hooks/useAuth";
 import { Spinner } from "../../../components";
-
-interface FormData {
-  email: string;
-  password: string;
-}
+import { LoginParams } from "../../../models/auth";
 
 const schema = yup.object().shape({
   email: yup
@@ -33,7 +31,7 @@ const LoginPage: React.FC<LoginPropsType> = () => {
 
   const { isAuth, isLoading, login } = useAuth();
 
-  const loginHandler = (data: FormData) => {
+  const loginHandler = (data: LoginParams) => {
     login(data);
     navigate("/");
   };
@@ -42,7 +40,7 @@ const LoginPage: React.FC<LoginPropsType> = () => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<LoginParams>({
     resolver: yupResolver(schema),
   });
 
@@ -97,7 +95,7 @@ const LoginPage: React.FC<LoginPropsType> = () => {
                 <input
                   {...field}
                   className="mb-1 input"
-                  type="text"
+                  type="password"
                   placeholder="**********"
                 />
               )}

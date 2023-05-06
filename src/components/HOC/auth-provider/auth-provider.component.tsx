@@ -19,7 +19,7 @@ export const AuthProvider: React.FC<AuthProviderPropsType> = ({ children }) => {
   const [initialState, setInitialState] =
     React.useState<InitialStateType>(initial);
 
-  const login = async (user: LoginParams) => {
+  const login = React.useCallback(async (user: LoginParams) => {
     setInitialState((prev) => ({ ...prev, isLoading: true }));
     await httpApi
       .post("/auth/login", JSON.stringify(user))
@@ -50,9 +50,9 @@ export const AuthProvider: React.FC<AuthProviderPropsType> = ({ children }) => {
         window.localStorage.removeItem("accessToken");
         toast.error(err.response?.data?.message || "Что то пошло не так!");
       });
-  };
+  }, []);
 
-  const logout = async () => {
+  const logout = React.useCallback(async () => {
     setInitialState((prev) => ({ ...prev, isLoading: true }));
     await httpApi.post("/auth/logout");
     window.localStorage.removeItem("accessToken");
@@ -62,9 +62,9 @@ export const AuthProvider: React.FC<AuthProviderPropsType> = ({ children }) => {
       isLoading: false,
       user: null,
     }));
-  };
+  }, []);
 
-  const me = async () => {
+  const me = React.useCallback(async () => {
     setInitialState((prev) => ({ ...prev, isLoading: true }));
 
     await httpApi
@@ -88,7 +88,7 @@ export const AuthProvider: React.FC<AuthProviderPropsType> = ({ children }) => {
         }));
         window.localStorage.removeItem("accessToken");
       });
-  };
+  }, []);
 
   React.useEffect(() => {
     let token = localStorage.getItem("accessToken") ?? null;
@@ -96,15 +96,11 @@ export const AuthProvider: React.FC<AuthProviderPropsType> = ({ children }) => {
     if (initialState.isAuth === false && token) {
       me();
     }
-  }, [initialState.isAuth]);
-
-  if (initialState.isLoading) {
-    return <Spinner />;
-  }
+  }, [initialState.isAuth, me]);
 
   return (
     <AuthContext.Provider value={{ ...initialState, login, logout, me }}>
-      {children}
+      {initialState.isLoading && !initialState.isAuth ? <Spinner /> : children}
     </AuthContext.Provider>
   );
 };

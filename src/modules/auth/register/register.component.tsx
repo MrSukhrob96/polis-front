@@ -1,19 +1,16 @@
 import React from "react";
-import { RegisterPropsType } from "./register.types";
+
 import { useNavigate } from "react-router-dom";
 
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { toast } from "react-toastify";
-import httpApi from "../../../utils/axios";
 
-interface FormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
+import { RegisterPropsType } from "./register.types";
+import httpApi from "../../../utils/axios";
+import { User } from "../../../models/user";
+
 
 const schema = yup.object().shape({
   firstName: yup
@@ -41,7 +38,7 @@ const schema = yup.object().shape({
 const RegisterPage: React.FC<RegisterPropsType> = () => {
   const navigate = useNavigate();
 
-  const registerHandler = async (data: FormData) => {
+  const registerHandler = async (data: User) => {
     httpApi
       .post("/auth/register", JSON.stringify(data))
       .then((res) => {
@@ -59,7 +56,7 @@ const RegisterPage: React.FC<RegisterPropsType> = () => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<User>({
     resolver: yupResolver(schema),
   });
 
@@ -154,7 +151,7 @@ const RegisterPage: React.FC<RegisterPropsType> = () => {
                 <input
                   {...field}
                   className="mb-1 input"
-                  type="text"
+                  type="password"
                   placeholder="**********"
                 />
               )}
